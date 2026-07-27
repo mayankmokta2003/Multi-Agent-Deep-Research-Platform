@@ -1,40 +1,49 @@
 from langchain_core.prompts import ChatPromptTemplate
 from app.llms.mistral import get_llm
-from pydantic import BaseModel
-
+from pydantic import BaseModel, Field
 
 
 
 class ResearchStep(BaseModel):
-    agent: str
-    task: str
+    agent: str = Field(description="Agent responsible for this task")
+    task: str = Field(description="Task to perform")
 
 
 class PlannerOutput(BaseModel):
     research_steps: list[ResearchStep]
 
 
-prompt = ChatPromptTemplate.from_messages(
+
+planner_prompt = ChatPromptTemplate.from_messages(
     [
         (
             "system",
-            "You are an expert research planner. "
-            "Create a short research plan for the given topic.",
+            """
+You are the Planner Agent.
+
+Break the user's research query into small executable tasks.
+
+Available agents:
+
+1. web_agent
+2. paper_agent
+3. docs_agent
+
+Return ONLY valid JSON.
+""",
         ),
         ("human", "{query}"),
     ]
 )
 
 
+
 def planner_node(state):
     llm = get_llm()
     structured_llm = llm.with_structured_output(PlannerOutput)
-    chain = prompt | structured_llm
+    chain = planner_prompt | structured_llm
     response = chain.invoke({
         "query": state["query"]
     })
-    return {"plan": response.content}
-
-
-
+    return {"plan": response}
 
