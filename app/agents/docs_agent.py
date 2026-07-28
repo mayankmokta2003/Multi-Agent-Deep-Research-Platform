@@ -1,14 +1,12 @@
 from app.state.research_state import ResearchState
+from app.utils.tasks import get_tasks_for_agent
+from app.retrieval.retrieve import retrieve
 
 def docs_agent(state: ResearchState):
-    tasks = state["plan"].research_steps
-    docs_tasks = []
-    for step in tasks:
-        if step.agent == "docs_agent":
-            docs_tasks.append(step.task)
-    results = []
+    docs_tasks = get_tasks_for_agent(state, "docs_agent")
+    docs = []
     for task in docs_tasks:
-        results.append(f"DOCS EXECUTED -> {task}")
+        docs.append(retrieve())
     return {
-        "docs_results": results
+        "docs_results": docs
     }
