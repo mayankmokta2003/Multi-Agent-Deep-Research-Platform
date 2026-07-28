@@ -23,7 +23,7 @@ def search_papers(query: str, max_results: int = 5):
         link = entry.find("atom:id", namespace).text.strip()
         authors = []
         for author in entry.findall("atom:author",namespace):
-            authors.append(author.find("atom:author",namespace).text.strip())
+            authors.append(author.find("atom:name",namespace).text.strip())
         papers.append({
             "title": title,
             "summary": summary,

@@ -4,6 +4,19 @@ from app.state.research_state import ResearchState
 from app.agents.paper_agent import paper_agent
 from app.agents.web_agent import web_agent
 from app.agents.docs_agent import docs_agent
+from app.agents.merge_agent import merge_agent 
+from app.agents.writer_agent import writer_agent
+from app.agents.critic_agent import critic_agent
+
+
+
+
+def should_continue(state: ResearchState):
+    if state["approved"] == True:
+        return END
+    return "writer_agent"
+
+
 
 
 builder = StateGraph(ResearchState)
@@ -12,12 +25,21 @@ builder.add_node("planner", planner_node)
 builder.add_node("paper_agent", paper_agent)
 builder.add_node("web_agent", web_agent)
 builder.add_node("docs_agent", docs_agent)
+builder.add_node("merge_agent", merge_agent)
+builder.add_node("writer_agent", writer_agent)
+builder.add_node("critic_agent", critic_agent)
+
 
 builder.add_edge(START, "planner")
 builder.add_edge("planner", "paper_agent")
 builder.add_edge("planner", "web_agent")
 builder.add_edge("planner", "docs_agent")
-builder.add_edge("paper_agent", END)
+builder.add_edge("docs_agent", "merge_agent")
+builder.add_edge("paper_agent", "merge_agent")
+builder.add_edge("web_agent", "merge_agent")
+builder.add_edge("merge_agent", "writer_agent")
+builder.add_edge("writer_agent", "critic_agent")
+builder.add_conditional_edges("critic_agent", should_continue)
+
 
 graph = builder.compile()
-

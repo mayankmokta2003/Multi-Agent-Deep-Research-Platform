@@ -1,15 +1,11 @@
 from app.state.research_state import ResearchState
-
+from app.utils.tasks import get_tasks_for_agent
+from app.tools.tavily import search_web
 
 def web_agent(state: ResearchState):
-    tasks = state['plan'].research_steps
-    web_tasks = []
-    for step in tasks:
-        if step.agent == "web_agent":
-            web_tasks.append(step.task)
+    web_tasks = get_tasks_for_agent(state, "web_agent")
     results = []
     for task in web_tasks:
-        results.append(f"WEB EXECUTED -> {task}")
+        out = search_web(task)
+        results.extend(out)
     return {"web_results": results}
-
-

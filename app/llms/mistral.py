@@ -9,7 +9,7 @@ def get_llm():
     return ChatMistralAI(
         model = setting.model_name,
         temperature=setting.temperature,
-        api_key = setting.mistral_api_key
+        api_key = setting.MISTRAL_API_KEY
     )
 
 

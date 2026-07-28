@@ -4,7 +4,8 @@ from functools import lru_cache
 class Settings(BaseSettings):
     project_name: str = "ResearchOS"
     environment: str = "development"
-    mistral_api_key: str
+    MISTRAL_API_KEY: str
+    TAVILY_API_KEY: str
     model_name: str = "mistral-small-latest"
     temperature: float = 0.0
     model_config = SettingsConfigDict(

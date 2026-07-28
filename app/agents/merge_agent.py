@@ -1,9 +1,12 @@
 from app.state.research_state import ResearchState
-
+# merged_context
 
 def merge_agent(state: ResearchState):
-    final = []
-    final.extend(state['docs_results'])
-    final.extend(state['web_results'])
-    final.extend(state['paper_results'])
-    return {"final_result": "\n".join(final)}
+    return{
+        "merged_context": {
+            "query": state["query"],
+            "web_results": state["web_results"],
+            "paper_results": state["paper_results"],
+            "docs_results": state["docs_results"],
+        }
+    }

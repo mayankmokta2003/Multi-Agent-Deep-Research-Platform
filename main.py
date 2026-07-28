@@ -6,6 +6,9 @@ response = graph.invoke({
 })
 
 
-print(response)
+# print(response)
+print("------------ PAPER RESULTS ---------------")
 # print(response["paper_results"])
 
+print("------------ WEB RESULTS ---------------")
+print(response["final_result"])

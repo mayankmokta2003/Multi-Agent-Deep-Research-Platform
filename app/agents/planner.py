@@ -25,9 +25,9 @@ Break the user's research query into small executable tasks.
 
 Available agents:
 
-1. web_agent
-2. paper_agent
-3. docs_agent
+1. web_agent (Latest news, blogs, documentation, websites)
+2. paper_agent (Research papers)
+3. docs_agent (Uploaded PDFs)
 
 Return ONLY valid JSON.
 """,
