@@ -17,3 +17,4 @@ class ResearchState(TypedDict):
     weaknesses: list[str]
     missing_topics: list[str]
     revision_count: int
+    memory_context: str

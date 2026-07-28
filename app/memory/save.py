@@ -4,10 +4,10 @@ from app.config.settings import get_settings
 
 settings = get_settings()
 
-
 embeddings = MistralAIEmbeddings(
     api_key=settings.MISTRAL_API_KEY
 )
+
 
 vectorstore = Chroma(
     collection_name="research_memory",
@@ -16,9 +16,10 @@ vectorstore = Chroma(
 )
 
 
-def retrieve_memory(query: str):
-    docs = vectorstore.similarity_search(query=query, k=3)
-    return docs
-
-
-
+def save_memory(query: str, report: str):
+    vectorstore.add_texts(
+        texts = [report],
+        metadata={
+            "query": query
+        }
+    )
