@@ -31,6 +31,6 @@ def writer_agent(state: ResearchState):
     response = chain.invoke({
         "query": state["query"],
         "context": state["merged_context"],
-        "feedback": state["feedback"]
+        "feedback": state.get("feedback", "")
     })
-    return{"final_result": response.content}
+    return{"final_result": response.content, "revision_count": state["revision_count"]+1}

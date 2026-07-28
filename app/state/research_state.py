@@ -8,7 +8,7 @@ class ResearchState(TypedDict):
     web_results: list
     paper_results: list
     docs_results: list
-    merged_context: dict
+    merged_context: str
     final_result: str
     approved: bool
     feedback: str

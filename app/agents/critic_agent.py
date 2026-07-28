@@ -46,7 +46,7 @@ def critic_agent(state: ResearchState):
     llm = get_llm()
     structured_llm = llm.with_structured_output(CriticOutput)
     chain = critic_prompt | structured_llm
-    response = chain.ivoke({
+    response = chain.invoke({
         "query": state["query"],
         "report": state["final_result"]
     })
