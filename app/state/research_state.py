@@ -18,3 +18,4 @@ class ResearchState(TypedDict):
     missing_topics: list[str]
     revision_count: int
     memory_context: str
+    sources: list
