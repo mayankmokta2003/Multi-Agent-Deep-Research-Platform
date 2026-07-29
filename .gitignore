@@ -1,5 +1,7 @@
 .venv/
 
+memory_db/
+
 .env
 
 __pycache__/
