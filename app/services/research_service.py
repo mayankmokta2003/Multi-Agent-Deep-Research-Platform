@@ -4,11 +4,13 @@ from app.database.connection import SessionLocal
 from app.models.research_model import Research
 
 
+
 def run_research(query: str):
     db = SessionLocal()
     try:
         result = graph.invoke({
-            "query": query
+            "query": query,
+            "revision_count": 0
         })
         research = Research(query=query, report=result["final_result"])
         db.add(research)
@@ -20,3 +22,14 @@ def run_research(query: str):
         raise RuntimeError(f"Research generation failed: {str(e)}")
     finally:
         db.close()
+
+
+
+def get_research_history():
+    db = SessionLocal()
+    try:
+        return db.query(Research).order_by(Research.created_at.desc()).all()
+    finally:
+        db.close()
+
+
