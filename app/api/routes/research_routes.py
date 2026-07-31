@@ -1,8 +1,10 @@
 from fastapi import APIRouter
 from typing import List
 from app.schemas.research_schema import ResearchRequest
-from app.services.research_service import run_research, get_research_history, get_research_by_id,delete_research
+from app.services.research_service import run_research, get_research_history, get_research_by_id,delete_research, upload_pdf
 from app.schemas.research_response import ResearchResponse, ResearchHistoryResponse
+from fastapi import UploadFile, File
+
 
 router = APIRouter(prefix="/research", tags=["Research"])
 
@@ -37,3 +39,5 @@ def delete(research_id: int):
 
 
 @router.post("/upload")
+def upload(file: UploadFile = File(...)):
+    return upload_pdf(file)

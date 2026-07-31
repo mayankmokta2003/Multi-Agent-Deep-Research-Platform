@@ -3,8 +3,9 @@ from app.schemas.research_response import ResearchResponse
 from app.graph.graph_runner import run_graph
 from app.database.connection import SessionLocal
 from app.models.research_model import Research
-from fastapi import HTTPException
-
+from fastapi import HTTPException, UploadFile
+import fitz
+import os
 
 
 def run_research(query: str):
@@ -70,6 +71,29 @@ def delete_research(research_id: int):
 
 
 
+UPLOAD_DIR = "uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 def upload_pdf(file: UploadFile):
-    
+    if not file.filename.endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
+    file_path = os.path.join(UPLOAD_DIR, file.filename)
+    with open(file_path, "wb") as pdf:
+        pdf.write(file.file.read())
+    pdf_text = extract_pdf_text(file_path)
+    return {
+        "message": "PDF uploaded successfully.",
+        "filename": file.filename,
+        "characters": len(pdf_text)
+    }
+
+
+
+def extract_pdf_text(file_path: str):
+    document = fitz.open(file_path)
+    text = ""
+    for page in document:
+        text += text.page_content
+    document.close()
+    return text
+
