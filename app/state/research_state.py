@@ -23,4 +23,6 @@ class ResearchState(TypedDict):
 
     sources: list
 
+    evaluation: dict
+
     
