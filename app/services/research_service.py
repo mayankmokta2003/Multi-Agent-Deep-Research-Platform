@@ -4,7 +4,7 @@ from app.graph.graph_runner import run_graph
 from app.database.connection import SessionLocal
 from app.models.research_model import Research
 from fastapi import HTTPException, UploadFile
-import fitz
+from app.retrieval.ingest import ingest_pdf
 import os
 
 
@@ -62,38 +62,23 @@ def delete_research(research_id: int):
             raise HTTPException(status_code=404, detail="Research not found")
         db.delete(research)
         db.commit()
-        return {
-            "message": "Research deleted successfully"
-        }
-
+        return {"message": "Research deleted successfully"}
     finally:
         db.close()
 
 
 
+
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-
 def upload_pdf(file: UploadFile):
     if not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are allowed.")
     file_path = os.path.join(UPLOAD_DIR, file.filename)
     with open(file_path, "wb") as pdf:
         pdf.write(file.file.read())
-    pdf_text = extract_pdf_text(file_path)
+    ingest_pdf(file_path)
     return {
         "message": "PDF uploaded successfully.",
         "filename": file.filename,
-        "characters": len(pdf_text)
     }
-
-
-
-def extract_pdf_text(file_path: str):
-    document = fitz.open(file_path)
-    text = ""
-    for page in document:
-        text += text.page_content
-    document.close()
-    return text
-
