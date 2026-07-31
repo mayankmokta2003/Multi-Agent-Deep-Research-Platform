@@ -41,7 +41,6 @@ builder.add_node("context_builder", context_builder)
 builder.add_node("writer_agent", writer_agent)
 builder.add_node("critic_agent", critic_agent)
 builder.add_node("memory_agent", memory_agent)
-# builder.add_node("citation_agent", citation_agent)
 builder.add_node("memory_save_agent", memory_save_agent)
 builder.add_node("cached_response_agent", cached_response_agent)
 

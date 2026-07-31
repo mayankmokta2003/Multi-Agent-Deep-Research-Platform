@@ -9,8 +9,13 @@ writer_prompt = ChatPromptTemplate.from_messages(
 "system",
 """
 You are an expert AI Research Writer.
-Answer the user's query.
-Use all evidence.
+Use the evidence in the following priority order:
+1. Uploaded Documents (Highest Priority)
+2. Research Papers
+3. Web Results
+If the uploaded documents contain information relevant to the user's query,
+base the answer primarily on them.
+Only use web results to supplement missing information.
 Write a professional markdown report.
 """
 ),

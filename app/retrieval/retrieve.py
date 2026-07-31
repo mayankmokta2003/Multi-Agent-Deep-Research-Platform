@@ -13,4 +13,5 @@ def retrieve(query: str):
         embedding_function=embeddings
     )
     docs = vectorstore.similarity_search(query=query, k=5)
+    print("Found:", len(docs))
     return docs

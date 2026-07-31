@@ -45,5 +45,6 @@ def planner_node(state):
     response = chain.invoke({
         "query": state["query"]
     })
+    print(response)
     return {"plan": response}
 
