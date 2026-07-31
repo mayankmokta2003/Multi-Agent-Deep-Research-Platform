@@ -2,7 +2,6 @@ from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
 from app.llms.mistral import get_llm
 from app.state.research_state import ResearchState
-from langchain_core.output_parsers import PydanticOutputParser
 
 
 class Evaluation(BaseModel):
@@ -12,8 +11,6 @@ class Evaluation(BaseModel):
     hallucination_risk: str = Field(description="Low, Medium or High")
     feedback: str = Field(description="Short feedback")
 
-
-parser = PydanticOutputParser(pydantic_object=Evaluation)
 
 prompt = ChatPromptTemplate.from_messages([
     ("system", """
@@ -36,16 +33,12 @@ llm = get_llm()
 
 
 
-chain = (
-    prompt.partial(
-        format_instructions=parser.get_format_instructions()
-    )
-    | llm
-    | parser
-)
+
 
 
 def evaluator_agent(state: ResearchState):
+    llm = get_llm().with_structured_output(Evaluation)
+    chain = prompt | llm
     evaluation = chain.invoke({
         "query": state["query"],
         "answer": state["final_result"]

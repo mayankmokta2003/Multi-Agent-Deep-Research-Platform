@@ -11,6 +11,7 @@ from app.agents.memory_agent import memory_agent
 from app.agents.citation_agent import citation_agent
 from app.agents.memory_save_agent import memory_save_agent
 from app.agents.cached_response_agent import cached_response_agent
+from app.agents.evaluator_agent import evaluator_agent
 
 
 MAX_REVISIONS = 2
@@ -43,6 +44,7 @@ builder.add_node("critic_agent", critic_agent)
 builder.add_node("memory_agent", memory_agent)
 builder.add_node("memory_save_agent", memory_save_agent)
 builder.add_node("cached_response_agent", cached_response_agent)
+builder.add_node("evaluator_agent", evaluator_agent)
 
 
 builder.add_edge(START, "memory_agent")
