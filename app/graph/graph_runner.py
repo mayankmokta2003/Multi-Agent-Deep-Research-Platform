@@ -6,3 +6,4 @@ def run_graph(query: str):
         "revision_count": 0,
     })
     return result
+

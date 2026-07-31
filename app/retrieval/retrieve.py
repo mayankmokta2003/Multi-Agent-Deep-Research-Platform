@@ -12,6 +12,10 @@ def retrieve(query: str):
         persist_directory="db",
         embedding_function=embeddings
     )
-    docs = vectorstore.similarity_search(query=query, k=5)
+    docs = vectorstore.similarity_search_with_relevance_scores(query=query, k=5)
+    filtered_docs = []
+    for doc, score in docs:
+        if score > 0.7:
+            filtered_docs.append(doc)
     print("Found:", len(docs))
-    return docs
+    return filtered_docs
