@@ -1,9 +1,10 @@
 from app.graph.builder import graph
 from app.schemas.research_response import ResearchResponse
-from app.graph.graph_runner import run_graph, run_graph_stream
+from app.graph.graph_runner import run_graph
 from app.database.connection import SessionLocal
 from app.models.research_model import Research
 from fastapi import HTTPException, UploadFile
+from app.agents.evaluator_agent import evaluator_agent
 from app.retrieval.ingest import ingest_pdf
 import json
 import time
@@ -14,10 +15,11 @@ def run_research(query: str):
     db = SessionLocal()
     try:
         result = run_graph(query)
+        evaluation = evaluator_agent(result)
         research = Research(query=query, report=result["final_result"])
         db.add(research)
         db.commit()
-        return ResearchResponse(report=result["final_result"])
+        return ResearchResponse(report=result["final_result"], evaluation=evaluation)
 
     except Exception as e:
         db.rollback()

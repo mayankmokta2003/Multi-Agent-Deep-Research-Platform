@@ -5,8 +5,6 @@ from app.services.research_service import run_research, get_research_history, ge
 from app.schemas.research_response import ResearchResponse, ResearchHistoryResponse
 from fastapi import UploadFile, File
 
-from fastapi.responses import StreamingResponse
-from app.services.research_service import stream_research
 
 
 router = APIRouter(prefix="/research", tags=["Research"])
@@ -46,11 +44,5 @@ def upload(file: UploadFile = File(...)):
     return upload_pdf(file)
 
 
-@router.post("/stream")
-def research_stream(request: ResearchRequest):
-    return StreamingResponse(
-        stream_research(request.query),
-        media_type="text/plain"
-    )
 
 

@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
+
 from app.llms.mistral import get_llm
 from app.state.research_state import ResearchState
 
@@ -8,42 +9,48 @@ class Evaluation(BaseModel):
     groundedness: float = Field(description="Score from 1-10")
     relevance: float = Field(description="Score from 1-10")
     completeness: float = Field(description="Score from 1-10")
-    hallucination_risk: str = Field(description="Low, Medium or High")
-    feedback: str = Field(description="Short feedback")
+    hallucination_risk: str = Field(description="Low | Medium | High")
+    feedback: str
 
 
 prompt = ChatPromptTemplate.from_messages([
-    ("system", """
-You are an expert LLM evaluator.
-Evaluate the answer on:
-1. Groundedness (1-10)
-2. Relevance (1-10)
-3. Completeness (1-10)
-4. Hallucination Risk (Low/Medium/High)
-{format_instructions}
-"""),
-    ("human", """
-Question:{query}
-Answer:{answer}
-""")
+    (
+        "system",
+        """
+You are an expert evaluator.
+
+Evaluate the answer based on:
+
+1. Groundedness
+2. Relevance
+3. Completeness
+4. Hallucination Risk
+
+Return scores from 1-10.
+"""
+    ),
+    (
+        "human",
+        """
+Question:
+{query}
+
+Answer:
+{answer}
+"""
+    )
 ])
 
 
-llm = get_llm()
-
-
-
-
-
-
 def evaluator_agent(state: ResearchState):
+
     llm = get_llm().with_structured_output(Evaluation)
+
     chain = prompt | llm
+
     evaluation = chain.invoke({
         "query": state["query"],
         "answer": state["final_result"]
     })
-    return {
-        "evaluation": evaluation.model_dump()
-    }
 
+    return evaluation.model_dump()

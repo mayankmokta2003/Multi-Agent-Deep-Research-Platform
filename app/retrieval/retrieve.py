@@ -15,7 +15,8 @@ def retrieve(query: str):
     docs = vectorstore.similarity_search_with_relevance_scores(query=query, k=5)
     filtered_docs = []
     for doc, score in docs:
-        if score > 0.7:
+        print(f"Score: {score:.3f}")
+        if score > 0.5:
             filtered_docs.append(doc)
-    print("Found:", len(docs))
+    print(f"Retrieved: {len(docs)} | Filtered: {len(filtered_docs)}")        
     return filtered_docs

@@ -11,7 +11,7 @@ from app.agents.memory_agent import memory_agent
 from app.agents.citation_agent import citation_agent
 from app.agents.memory_save_agent import memory_save_agent
 from app.agents.cached_response_agent import cached_response_agent
-from app.agents.evaluator_agent import evaluator_agent
+# from app.agents.evaluator_agent import evaluator_agent
 
 
 MAX_REVISIONS = 2
@@ -22,6 +22,14 @@ def should_continue(state: ResearchState):
     if state["revision_count"] > MAX_REVISIONS:
         return "memory_save_agent"
     return "writer_agent"
+
+
+# def should_continue(state: ResearchState):
+#     if state["approved"] == True:
+#         return "evaluator_agent"
+#     if state["revision_count"] > MAX_REVISIONS:
+#         return "memory_save_agent"
+#     return "writer_agent"
 
 
 
@@ -44,7 +52,7 @@ builder.add_node("critic_agent", critic_agent)
 builder.add_node("memory_agent", memory_agent)
 builder.add_node("memory_save_agent", memory_save_agent)
 builder.add_node("cached_response_agent", cached_response_agent)
-builder.add_node("evaluator_agent", evaluator_agent)
+# builder.add_node("evaluator_agent", evaluator_agent)
 
 
 builder.add_edge(START, "memory_agent")
@@ -63,6 +71,7 @@ builder.add_edge("writer_agent", "critic_agent")
 builder.add_conditional_edges("critic_agent", should_continue, {
     "memory_save_agent": "memory_save_agent", "writer_agent": "writer_agent"
 })
+# builder.add_edge("evaluator_agent", "memory_save_agent")
 builder.add_edge("memory_save_agent", END)
 
 graph = builder.compile()
