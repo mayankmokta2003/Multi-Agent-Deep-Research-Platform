@@ -20,22 +20,17 @@ planner_prompt = ChatPromptTemplate.from_messages(
             "system",
             """
 You are the Planner Agent.
-
 Break the user's research query into small executable tasks.
-
 Available agents:
-
 1. web_agent (Latest news, blogs, documentation, websites)
 2. paper_agent (Research papers)
 3. docs_agent (Uploaded PDFs)
-
 Return ONLY valid JSON.
 """,
         ),
         ("human", "{query}"),
     ]
 )
-
 
 
 def planner_node(state):
@@ -47,4 +42,3 @@ def planner_node(state):
     })
     print(response)
     return {"plan": response}
-

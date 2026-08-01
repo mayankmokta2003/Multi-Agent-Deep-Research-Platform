@@ -1,7 +1,0 @@
-uv add \
-langgraph \
-langchain \
-langchain-openai \
-python-dotenv \
-pydantic \
-pydantic-settings

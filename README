@@ -1,3 +1,111 @@
-# Research OS
+# 🔬 ResearchOS — Multi-Agent AI Research System
 
-Autonomous Multi-Agent Deep Research Platform built with LangGraph.
+ResearchOS is an **agentic AI research system** that autonomously plans research, gathers information from multiple sources, performs RAG over uploaded documents, generates reports, critiques its responses, and reuses previous research through semantic memory.
+
+Built with **LangGraph, LangChain, FastAPI, PostgreSQL, ChromaDB, Mistral AI, Tavily, and Docker**.
+
+## ✨ Features
+
+- Multi-agent research workflow with **LangGraph**
+- Planner-based task decomposition and agent routing
+- **Web + Research Paper + Document agents**
+- PDF-based **RAG with relevance filtering**
+- Writer → Critic self-revision loop
+- Semantic memory / cached responses
+- Response evaluation
+- PostgreSQL research history
+- FastAPI REST APIs
+- Dockerized API + PostgreSQL
+- Pytest API testing
+
+## 🏗️ Architecture
+
+```text
+                    User Query
+                        │
+                   Memory Agent
+                   /          \
+             Memory Hit     Memory Miss
+                 │              │
+          Cached Response     Planner
+                                │
+                   ┌────────────┼────────────┐
+                   ▼            ▼            ▼
+                 Web          Papers       Docs/RAG
+                   └────────────┼────────────┘
+                                ▼
+                         Context Builder
+                                │
+                             Writer
+                                │
+                             Critic
+                           ↙        ↘
+                       Revise     Approved
+                                     │
+                                Memory Save
+                                     │
+                               Final Response
+```
+
+## 📄 RAG Pipeline
+
+```text
+PDF → Chunking → Mistral Embeddings → ChromaDB
+                                      │
+Query → Similarity Search → Relevance Filtering
+                                      │
+                                Writer Context
+```
+
+Uploaded documents are prioritized when relevant, while low-relevance chunks are filtered before generation.
+
+## 🛠️ Tech Stack
+
+| Component | Technology |
+|---|---|
+| Agents | LangGraph + LangChain |
+| LLM | Mistral AI |
+| Search | Tavily |
+| Vector DB | ChromaDB |
+| Backend | FastAPI |
+| Database | PostgreSQL |
+| Testing | Pytest |
+| Deployment | Docker Compose |
+
+## ⚡ Run
+
+Create a `.env` file:
+
+```env
+MISTRAL_API_KEY=your_key
+TAVILY_API_KEY=your_key
+```
+
+Start the application:
+
+```bash
+docker compose up --build
+```
+
+Swagger:
+
+```text
+http://localhost:8000/docs
+```
+
+Run tests:
+
+```bash
+python -m pytest -v
+```
+
+## 💡 Engineering Highlights
+
+- **LangGraph** enables conditional routing, shared state, parallel agents, and revision loops.
+- **Relevance filtering + critic evaluation** improve response grounding.
+- **Semantic memory** avoids repeated LLM/search calls for similar queries.
+- **ChromaDB** handles semantic retrieval while **PostgreSQL** handles structured research history.
+
+## 👨‍💻 Author
+
+**Mayank Mokta**
