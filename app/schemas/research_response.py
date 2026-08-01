@@ -3,13 +3,13 @@ from datetime import datetime
 
 class ResearchResponse(BaseModel):
     report: str
+    evaluation: dict
 
 
 class ResearchHistoryResponse(BaseModel):
     id: int
     query: str
     report: str
-    evaluation: dict
     created_at: datetime
 
     model_config = {
