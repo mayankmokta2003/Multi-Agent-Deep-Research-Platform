@@ -12,7 +12,6 @@ def memory_agent(state: ResearchState):
             "memory_context": "",
             "memory_hit": False
         }
-
     return {
         "memory_context": docs.page_content,
         "memory_hit": True
