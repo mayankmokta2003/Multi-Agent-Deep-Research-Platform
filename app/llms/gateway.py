@@ -42,3 +42,25 @@ def call_llm(prompt: str):
         ]
     )
     return response.choices[0].message.content
+
+
+
+
+# def call_llm(prompt: str, response_format=None):
+
+#     kwargs = {
+#         "model": "primary-model",
+#         "messages": [
+#             {
+#                 "role": "user",
+#                 "content": prompt
+#             }
+#         ]
+#     }
+
+#     if response_format:
+#         kwargs["response_format"] = response_format
+
+#     response = router.completion(**kwargs)
+
+#     return response.choices[0].message.content

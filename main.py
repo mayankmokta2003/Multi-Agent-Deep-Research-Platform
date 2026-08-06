@@ -2,7 +2,7 @@ from app.graph.builder import graph
 
 
 response = graph.invoke({
-    "query": "generative ai evolution",
+    "query": "The history of india",
     "revision_count": 0
 })
 

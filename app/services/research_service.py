@@ -12,6 +12,7 @@ import os
 def run_research(query: str):
     db = SessionLocal()
     try:
+        
         result = run_graph(query)
         evaluation = evaluate_response(
             query = query,

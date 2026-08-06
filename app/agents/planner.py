@@ -1,6 +1,7 @@
 from langchain_core.prompts import ChatPromptTemplate
 from app.llms.mistral import get_llm
-from app.llms.mistral import get_llm
+from app.llms.gateway import call_llm
+from langchain_litellm import ChatLiteLLM
 from pydantic import BaseModel, Field
 
 
@@ -34,8 +35,27 @@ Return ONLY valid JSON.
 )
 
 
+# def planner_node(state):
+#     llm = get_llm()
+#     structured_llm = llm.with_structured_output(PlannerOutput)
+#     chain = planner_prompt | structured_llm
+#     response = chain.invoke({
+#         "query": state["query"]
+#     })
+#     print(response)
+#     return {"plan": response}
+
+
+
+
+
+
+primary_llm = ChatLiteLLM(model="mistral/mistral-small-latest")
+fallback_llm = ChatLiteLLM(model="gemini/gemini-2.5-flash")
+
+llm = primary_llm.with_fallbacks([fallback_llm])
+
 def planner_node(state):
-    llm = get_llm()
     structured_llm = llm.with_structured_output(PlannerOutput)
     chain = planner_prompt | structured_llm
     response = chain.invoke({
@@ -43,3 +63,4 @@ def planner_node(state):
     })
     print(response)
     return {"plan": response}
+
