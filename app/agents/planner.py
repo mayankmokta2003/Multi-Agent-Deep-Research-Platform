@@ -1,5 +1,6 @@
 from langchain_core.prompts import ChatPromptTemplate
 from app.llms.mistral import get_llm
+from app.llms.mistral import get_llm
 from pydantic import BaseModel, Field
 
 

@@ -1,5 +1,6 @@
 from langchain_core.prompts import ChatPromptTemplate
 from app.llms.mistral import get_llm
+from app.llms.gateway import call_llm
 from app.state.research_state import ResearchState
 
 
@@ -30,12 +31,24 @@ Critic Feedback: {feedback}
 ])
 
 
+# def writer_agent(state: ResearchState):
+#     llm = get_llm()
+#     chain = writer_prompt | llm
+#     response = chain.invoke({
+#         "query": state["query"],
+#         "context": state["merged_context"],
+#         "feedback": state.get("feedback", "")
+#     })
+#     return{"final_result": response.content, "revision_count": state["revision_count"]+1}
+
+
+
+
 def writer_agent(state: ResearchState):
-    llm = get_llm()
-    chain = writer_prompt | llm
-    response = chain.invoke({
-        "query": state["query"],
-        "context": state["merged_context"],
-        "feedback": state.get("feedback", "")
-    })
-    return{"final_result": response.content, "revision_count": state["revision_count"]+1}
+    prompt = writer_prompt.format(
+        query = state["query"],
+        context=state["merged_context"],
+        feedback=state.get("feedback", "")
+    )
+    response = call_llm(prompt)
+    return{"final_result": response, "revision_count": state["revision_count"]+1}
