@@ -5,6 +5,7 @@ class Settings(BaseSettings):
     project_name: str = "ResearchOS"
     environment: str = "development"
     MISTRAL_API_KEY: str
+    GEMINI_API_KEY: str
     TAVILY_API_KEY: str
     DATABASE_URL: str
     model_name: str = "mistral-small-latest"
