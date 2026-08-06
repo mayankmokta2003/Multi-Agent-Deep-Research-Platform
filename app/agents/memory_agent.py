@@ -5,14 +5,16 @@ from app.state.research_state import ResearchState
 
 
 def memory_agent(state: ResearchState):
-    docs = retrieve_memory(state['query'])
-
-    if not docs:
+    report = retrieve_memory(state['query'])
+    print("MEMORY____________________________ False")
+    if not report:
         return{
             "memory_context": "",
             "memory_hit": False
         }
+    
+    print("MEMORY____________________________ True")
     return {
-        "memory_context": docs.page_content,
+        "memory_context": report,
         "memory_hit": True
     }

@@ -16,10 +16,19 @@ vectorstore = Chroma(
 )
 
 
+# def save_memory(query: str, report: str):
+#     vectorstore.add_texts(
+#         texts = [report],
+#         metadata={
+#             "query": query
+#         }
+#     )
+
+
 def save_memory(query: str, report: str):
     vectorstore.add_texts(
-        texts = [report],
-        metadata={
-            "query": query
-        }
+        texts=[query],
+        metadatas=[{
+            "report": report
+        }]
     )

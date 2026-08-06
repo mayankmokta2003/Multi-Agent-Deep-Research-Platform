@@ -13,5 +13,5 @@ print("------------ PAPER RESULTS ---------------")
 
 print("------------ WEB RESULTS ---------------")
 print(response["final_result"])
-print("balabaljajjsjjs",response["revision_count"])
+# print("balabaljajjsjjs",response["revision_count"])
 print("MEMORY____________________________", response["memory_hit"])

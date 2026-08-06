@@ -19,12 +19,13 @@ THRESHOLD = 0.85
 
 
 def retrieve_memory(query: str):
-    results = vectorstore._similarity_search_with_relevance_scores(query=query, k=1)
+    results = vectorstore.similarity_search_with_relevance_scores(query=query, k=1)
     if not results:
         return None
     doc, score = results[0]
+    print(f"Memory score: {score:.3f}")
     if score < THRESHOLD:
         return None
-    return doc
+    return doc.metadata["report"]
 
 

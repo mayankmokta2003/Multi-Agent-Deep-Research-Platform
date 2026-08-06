@@ -9,7 +9,6 @@ from fastapi import UploadFile, File
 
 router = APIRouter(prefix="/research", tags=["Research"])
 
-
 @router.post("", response_model=ResearchResponse)
 def research(request: ResearchRequest):
     return run_research(request.query)
