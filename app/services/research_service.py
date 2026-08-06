@@ -1,4 +1,4 @@
-from app.graph.builder import graph
+
 from app.schemas.research_response import ResearchResponse
 from app.graph.graph_runner import run_graph
 from app.database.connection import SessionLocal
@@ -6,8 +6,6 @@ from app.models.research_model import Research
 from fastapi import HTTPException, UploadFile
 from app.agents.evaluator_agent import evaluate_response
 from app.retrieval.ingest import ingest_pdf
-import json
-import time
 import os
 
 

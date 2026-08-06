@@ -8,7 +8,6 @@ from app.agents.context_builder import context_builder
 from app.agents.writer_agent import writer_agent
 from app.agents.critic_agent import critic_agent
 from app.agents.memory_agent import memory_agent
-from app.agents.citation_agent import citation_agent
 from app.agents.memory_save_agent import memory_save_agent
 from app.agents.cached_response_agent import cached_response_agent
 
