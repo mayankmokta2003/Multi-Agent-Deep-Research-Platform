@@ -2,7 +2,7 @@ from app.graph.builder import graph
 
 
 response = graph.invoke({
-    "query": "The history of india",
+    "query": "why is caching important is apps",
     "revision_count": 0
 })
 
