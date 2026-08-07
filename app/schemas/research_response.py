@@ -1,10 +1,13 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+# class ResearchResponse(BaseModel):
+#     report: str
+#     evaluation: dict
+
+
 class ResearchResponse(BaseModel):
     report: str
-    evaluation: dict
-
 
 class ResearchHistoryResponse(BaseModel):
     id: int

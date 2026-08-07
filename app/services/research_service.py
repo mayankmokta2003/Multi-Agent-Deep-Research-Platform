@@ -17,6 +17,48 @@ redis_client = redis.Redis(host="localhost", port=6379, decode_responses=True)
 CACHE_TTL = 3600
 
 
+# def run_research(query: str):
+#     db = SessionLocal()
+#     cache_key = "research:" + hashlib.sha256(
+#         query.strip().lower().encode()
+#     ).hexdigest()
+#     try:
+#         cached = redis_client.get(cache_key)
+#         if cached:
+#             print("CACHE HIT")
+#             data = json.loads(cached)
+#             return ResearchResponse(**data)
+        
+#         print("CACHE MISS")
+#         result = run_graph(query)
+#         evaluation = evaluate_response(
+#             query = query,
+#             context = result.get("merged_context", ""),
+#             answer = result["final_result"]
+#         )
+#         response =  ResearchResponse(report=result["final_result"], evaluation=evaluation)
+#         research = Research(query=query, report=result["final_result"])
+#         db.add(research)
+#         db.commit()
+
+#         redis_client.setex(
+#             cache_key,
+#             CACHE_TTL,
+#             json.dumps(response.model_dump())
+#         )
+#         return response
+
+#     except Exception as e:
+#         db.rollback()
+#         raise RuntimeError(f"Research generation failed: {str(e)}")
+#     finally:
+#         db.close()
+
+
+
+
+
+
 def run_research(query: str):
     db = SessionLocal()
     cache_key = "research:" + hashlib.sha256(
@@ -31,12 +73,8 @@ def run_research(query: str):
         
         print("CACHE MISS")
         result = run_graph(query)
-        evaluation = evaluate_response(
-            query = query,
-            context = result.get("merged_context", ""),
-            answer = result["final_result"]
-        )
-        response =  ResearchResponse(report=result["final_result"], evaluation=evaluation)
+        
+        response =  ResearchResponse(report=result["final_result"])
         research = Research(query=query, report=result["final_result"])
         db.add(research)
         db.commit()

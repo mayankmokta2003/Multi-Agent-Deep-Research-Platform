@@ -2,8 +2,7 @@ from app.state.research_state import ResearchState
 from fastapi import HTTPException
 
 
-def output_guardrail(state: ResearchState):
-    report = state["final_result"]
+def output_guardrail(report: str):
     if len(report.strip()) > 200:
         raise HTTPException(
             status_code=500,

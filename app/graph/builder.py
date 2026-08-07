@@ -10,7 +10,7 @@ from app.agents.critic_agent import critic_agent
 from app.agents.memory_agent import memory_agent
 from app.agents.memory_save_agent import memory_save_agent
 from app.agents.cached_response_agent import cached_response_agent
-from app.guardrails.input_guardrails import input_gaurdrail
+from app.guardrails.input_guardrails import input_guardrail
 from app.guardrails.output_guardrail import output_guardrail
 
 
@@ -42,12 +42,12 @@ builder.add_node("critic_agent", critic_agent)
 builder.add_node("memory_agent", memory_agent)
 builder.add_node("memory_save_agent", memory_save_agent)
 builder.add_node("cached_response_agent", cached_response_agent)
-builder.add_node("input_gaurdrail", input_gaurdrail)
+builder.add_node("input_guardrail", input_guardrail)
 builder.add_node("output_guardrail", output_guardrail)
 
 
-builder.add_edge(START, "input_gaurdrail")
-builder.add_edge("input_gaurdrail", "memory_agent")
+builder.add_edge(START, "input_guardrail")
+builder.add_edge("input_guardrail", "memory_agent")
 builder.add_conditional_edges("memory_agent", should_research, {
     "cached_response_agent": "cached_response_agent", "planner": "planner"
 })
