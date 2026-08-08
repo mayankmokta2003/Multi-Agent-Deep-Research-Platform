@@ -2,7 +2,8 @@ from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 from app.llms.mistral import get_llm
 from app.state.research_state import ResearchState
-
+from app.utils.retry import with_retry
+from langchain_litellm import ChatLiteLLM
 
 
 class CriticOutput(BaseModel):
@@ -42,11 +43,33 @@ Return structured output.
 
 
 
+# def critic_agent(state: ResearchState):
+#     llm = get_llm()
+#     structured_llm = llm.with_structured_output(CriticOutput)
+#     chain = critic_prompt | structured_llm
+#     response = chain.invoke({
+#         "query": state["query"],
+#         "report": state["final_result"]
+#     })
+#     return {
+#     "approved": response.approved,
+#     "score": response.score,
+#     "strengths": response.strengths,
+#     "weaknesses": response.weaknesses,
+#     "missing_topics": response.missing_topics,
+#     "feedback": response.feedback,
+# }
+
+
+
+primary_llm = ChatLiteLLM(model="mistral/mistral-small-latest")
+fallback_llm = ChatLiteLLM(model="gemini/gemini-2.5-flash")
+llm = primary_llm.with_fallbacks([fallback_llm])
+
 def critic_agent(state: ResearchState):
-    llm = get_llm()
     structured_llm = llm.with_structured_output(CriticOutput)
     chain = critic_prompt | structured_llm
-    response = chain.invoke({
+    response = with_retry(chain.invoke, {
         "query": state["query"],
         "report": state["final_result"]
     })
@@ -58,4 +81,3 @@ def critic_agent(state: ResearchState):
     "missing_topics": response.missing_topics,
     "feedback": response.feedback,
 }
-

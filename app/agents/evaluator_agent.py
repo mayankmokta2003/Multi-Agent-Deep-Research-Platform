@@ -3,6 +3,8 @@ from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
 from app.state.research_state import ResearchState
 from app.llms.mistral import get_llm
+from langchain_litellm import ChatLiteLLM
+from app.utils.retry import with_retry
 
 
 class Evaluation(BaseModel):
@@ -50,36 +52,35 @@ Generated Answer:
 ])
 
 
-# def evaluate_response(query: str, context: str, answer: str):
 
-#     llm = get_llm().with_structured_output(Evaluation)
 
-#     chain = evaluator_prompt | llm
+primary_llm = ChatLiteLLM(model="mistral/mistral-small-latest")
+fallback_llm = ChatLiteLLM(model="gemini/gemini-2.5-flash")
+
+llm = primary_llm.with_fallbacks([fallback_llm])
+
+
+
+
+# def evaluate_response(state: ResearchState):
+#     structured_llm = llm.with_structured_output(Evaluation)
+#     chain = evaluator_prompt | structured_llm
 
 #     evaluation = chain.invoke({
-#         "query": query,
-#         "context": context,
-#         "answer": answer
+#         "query": state["query"],
+#         "context": state.get("merged_context", ""),
+#         "answer": state["final_result"]
 #     })
-
-#     return evaluation.model_dump()
-
-
-
-
-
+#     return {"evaluation": evaluation}
+    
 
 def evaluate_response(state: ResearchState):
+    structured_llm = llm.with_structured_output(Evaluation)
+    chain = evaluator_prompt | structured_llm
 
-    llm = get_llm().with_structured_output(Evaluation)
-
-    chain = evaluator_prompt | llm
-
-    evaluation = chain.invoke({
+    evaluation = with_retry(chain.invoke, {
         "query": state["query"],
         "context": state.get("merged_context", ""),
         "answer": state["final_result"]
     })
     return {"evaluation": evaluation}
-    
-
