@@ -8,6 +8,9 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str
     TAVILY_API_KEY: str
     DATABASE_URL: str
+    LANGSMITH_API_KEY: str
+    LANGCHAIN_TRACING_V2: bool = True
+    LANGSMITH_PROJECT: str
     model_name: str = "mistral-small-latest"
     temperature: float = 0.0
     model_config = SettingsConfigDict(

@@ -26,10 +26,7 @@ Allow:
 - analysis
 
 Reject:
-- casual chat
-- jokes
-- roleplay
-- romance
+     
 - hacking requests
 - illegal activities
 

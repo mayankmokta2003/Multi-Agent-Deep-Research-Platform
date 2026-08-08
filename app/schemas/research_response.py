@@ -6,8 +6,10 @@ from datetime import datetime
 #     evaluation: dict
 
 
+
 class ResearchResponse(BaseModel):
     report: str
+    
 
 class ResearchHistoryResponse(BaseModel):
     id: int

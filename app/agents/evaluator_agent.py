@@ -1,7 +1,7 @@
 
 from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
-
+from app.state.research_state import ResearchState
 from app.llms.mistral import get_llm
 
 
@@ -31,6 +31,7 @@ Evaluate:
 
 Give scores from 1 to 10.
 Keep feedback short and specific.
+Return the answer in json
 """
     ),
     (
@@ -49,16 +50,36 @@ Generated Answer:
 ])
 
 
-def evaluate_response(query: str, context: str, answer: str):
+# def evaluate_response(query: str, context: str, answer: str):
+
+#     llm = get_llm().with_structured_output(Evaluation)
+
+#     chain = evaluator_prompt | llm
+
+#     evaluation = chain.invoke({
+#         "query": query,
+#         "context": context,
+#         "answer": answer
+#     })
+
+#     return evaluation.model_dump()
+
+
+
+
+
+
+def evaluate_response(state: ResearchState):
 
     llm = get_llm().with_structured_output(Evaluation)
 
     chain = evaluator_prompt | llm
 
     evaluation = chain.invoke({
-        "query": query,
-        "context": context,
-        "answer": answer
+        "query": state["query"],
+        "context": state.get("merged_context", ""),
+        "answer": state["final_result"]
     })
+    return {"evaluation": evaluation}
+    
 
-    return evaluation.model_dump()

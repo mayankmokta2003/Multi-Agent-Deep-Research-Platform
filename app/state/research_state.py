@@ -22,7 +22,8 @@ class ResearchState(TypedDict):
     memory_hit: bool
 
     sources: list
-
+    
     evaluation: dict
+    usage: list
 
     

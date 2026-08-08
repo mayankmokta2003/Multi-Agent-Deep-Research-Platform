@@ -12,6 +12,7 @@ from app.agents.memory_save_agent import memory_save_agent
 from app.agents.cached_response_agent import cached_response_agent
 from app.guardrails.input_guardrails import input_guardrail
 from app.guardrails.output_guardrail import output_guardrail
+from app.agents.evaluator_agent import evaluate_response
 
 
 MAX_REVISIONS = 2
@@ -44,6 +45,7 @@ builder.add_node("memory_save_agent", memory_save_agent)
 builder.add_node("cached_response_agent", cached_response_agent)
 builder.add_node("input_guardrail", input_guardrail)
 builder.add_node("output_guardrail", output_guardrail)
+builder.add_node("evaluate_response", evaluate_response)
 
 
 builder.add_edge(START, "input_guardrail")
@@ -63,6 +65,7 @@ builder.add_edge("writer_agent", "critic_agent")
 builder.add_conditional_edges("critic_agent", should_continue, {
     "memory_save_agent": "memory_save_agent", "writer_agent": "writer_agent"
 })
-builder.add_edge("memory_save_agent", END)
+builder.add_edge("memory_save_agent", "evaluate_response")
+builder.add_edge("evaluate_response", END)
 
 graph = builder.compile()

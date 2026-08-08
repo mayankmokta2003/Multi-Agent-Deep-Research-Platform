@@ -75,6 +75,7 @@ def run_research(query: str):
         result = run_graph(query)
         
         response =  ResearchResponse(report=result["final_result"])
+        
         research = Research(query=query, report=result["final_result"])
         db.add(research)
         db.commit()
