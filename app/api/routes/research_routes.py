@@ -13,8 +13,7 @@ router = APIRouter(prefix="/research", tags=["Research"])
 limiter = Limiter(key_func=get_remote_address)
 
 @router.post("", response_model=ResearchResponse)
-# @limiter.limit("5/minute")
-@limiter.limit("2/minute")
+@limiter.limit("10/minute")
 def research(request: Request, body: ResearchRequest):
     return run_research(body.query)
 

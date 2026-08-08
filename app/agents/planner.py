@@ -4,6 +4,7 @@ from app.llms.mistral import get_llm
 from app.llms.gateway import call_llm
 from langchain_litellm import ChatLiteLLM
 from pydantic import BaseModel, Field
+from app.utils.retry import with_retry
 
 
 
@@ -56,14 +57,30 @@ fallback_llm = ChatLiteLLM(model="gemini/gemini-2.5-flash")
 
 llm = primary_llm.with_fallbacks([fallback_llm])
 
+# def planner_node(state):
+#     structured_llm = llm.with_structured_output(PlannerOutput)
+#     chain = planner_prompt | structured_llm
+#     response = chain.invoke({
+#         "query": state["query"]
+#     })
+#     print(response)
+#     return {"plan": response}
+
+
+
+
 def planner_node(state):
     structured_llm = llm.with_structured_output(PlannerOutput)
     chain = planner_prompt | structured_llm
-    response = chain.invoke({
-        "query": state["query"]
-    })
+    response = with_retry(
+        chain.invoke,{
+            "query": state["query"]
+        }
+    )
     print(response)
     return {"plan": response}
+
+
 
 
 
