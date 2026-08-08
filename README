@@ -1,111 +1,99 @@
-# 🔬 ResearchOS — Multi-Agent AI Research System
+# Research OS
 
-ResearchOS is an **agentic AI research system** that autonomously plans research, gathers information from multiple sources, performs RAG over uploaded documents, generates reports, critiques its responses, and reuses previous research through semantic memory.
+A production-ready AI Research Assistant built using LangGraph, FastAPI, PostgreSQL, Redis, and ChromaDB. It performs multi-agent research by gathering information from the web, research papers, and uploaded documents, then generates a structured research report with built-in evaluation and production-grade optimizations.
 
-Built with **LangGraph, LangChain, FastAPI, PostgreSQL, ChromaDB, Mistral AI, Tavily, and Docker**.
+---
 
-## ✨ Features
+## Features
 
-- Multi-agent research workflow with **LangGraph**
-- Planner-based task decomposition and agent routing
-- **Web + Research Paper + Document agents**
-- PDF-based **RAG with relevance filtering**
-- Writer → Critic self-revision loop
-- Semantic memory / cached responses
-- Response evaluation
-- PostgreSQL research history
-- FastAPI REST APIs
-- Dockerized API + PostgreSQL
-- Pytest API testing
+- Multi-Agent workflow using LangGraph
+- Web, Research Paper, and Document Retrieval
+- RAG with ChromaDB
+- PDF Upload & Semantic Search
+- Long-Term Memory
+- Redis Response Caching
+- LLM Retry & Fallback
+- Input Guardrails
+- Research Evaluation
+- LangSmith Observability
+- Rate Limiting
+- Research History Management
 
-## 🏗️ Architecture
+---
 
-```text
-                    User Query
-                        │
-                   Memory Agent
-                   /          \
-             Memory Hit     Memory Miss
-                 │              │
-          Cached Response     Planner
-                                │
-                   ┌────────────┼────────────┐
-                   ▼            ▼            ▼
-                 Web          Papers       Docs/RAG
-                   └────────────┼────────────┘
-                                ▼
-                         Context Builder
-                                │
-                             Writer
-                                │
-                             Critic
-                           ↙        ↘
-                       Revise     Approved
-                                     │
-                                Memory Save
-                                     │
-                               Final Response
-```
+## Tech Stack
 
-## 📄 RAG Pipeline
+- FastAPI
+- LangGraph
+- LangChain
+- LiteLLM
+- Mistral AI
+- Gemini (Fallback)
+- Redis
+- PostgreSQL
+- ChromaDB
+- Tavily Search
+
+---
+
+## Architecture
 
 ```text
-PDF → Chunking → Mistral Embeddings → ChromaDB
-                                      │
-Query → Similarity Search → Relevance Filtering
-                                      │
-                                Writer Context
+                User Query
+                     │
+                     ▼
+           Input Guardrails
+                     │
+                     ▼
+             Memory / Cache
+                     │
+         ┌───────────┴───────────┐
+         │                       │
+     Cache Hit              Cache Miss
+         │                       │
+         ▼                       ▼
+   Cached Response          Research Planner
+                                 │
+                 ┌───────────────┼───────────────┐
+                 ▼               ▼               ▼
+            Web Agent      Paper Agent     Docs Agent
+                 └───────────────┼───────────────┘
+                                 ▼
+                        Context Builder
+                                 ▼
+                          Writer Agent
+                                 ▼
+                          Critic Agent
+                                 ▼
+                       Output Guardrails
+                                 ▼
+                      Evaluation & Storage
+                                 ▼
+                              Response
 ```
 
-Uploaded documents are prioritized when relevant, while low-relevance chunks are filtered before generation.
+---
 
-## 🛠️ Tech Stack
+## APIs
 
-| Component | Technology |
-|---|---|
-| Agents | LangGraph + LangChain |
-| LLM | Mistral AI |
-| Search | Tavily |
-| Vector DB | ChromaDB |
-| Backend | FastAPI |
-| Database | PostgreSQL |
-| Testing | Pytest |
-| Deployment | Docker Compose |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/research` | Generate research report |
+| GET | `/research/history` | Get research history |
+| GET | `/research/{id}` | Get research by ID |
+| DELETE | `/research/{id}` | Delete research |
+| POST | `/research/upload` | Upload PDF |
 
-## ⚡ Run
+---
 
-Create a `.env` file:
+## Production Features
 
-```env
-MISTRAL_API_KEY=your_key
-TAVILY_API_KEY=your_key
-```
+- Redis Cache for reduced latency
+- Retry with Exponential Backoff
+- LLM Fallback Support
+- Input & Output Guardrails
+- LangSmith Tracing
+- Response Evaluation
+- Rate Limiting
+- Parallel Agent Execution
 
-Start the application:
-
-```bash
-docker compose up --build
-```
-
-Swagger:
-
-```text
-http://localhost:8000/docs
-```
-
-Run tests:
-
-```bash
-python -m pytest -v
-```
-
-## 💡 Engineering Highlights
-
-- **LangGraph** enables conditional routing, shared state, parallel agents, and revision loops.
-- **Relevance filtering + critic evaluation** improve response grounding.
-- **Semantic memory** avoids repeated LLM/search calls for similar queries.
-- **ChromaDB** handles semantic retrieval while **PostgreSQL** handles structured research history.
-
-## 👨‍💻 Author
-
-**Mayank Mokta**
